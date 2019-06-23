@@ -42,7 +42,6 @@ class TodoListViewController: UITableViewController {
     // MARK: - Table view delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(items[indexPath.row])
         
         let selectedItem = items[indexPath.row]
         selectedItem.done = !selectedItem.done
@@ -51,6 +50,23 @@ class TodoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         tableView.reloadData()
+    }
+    
+    // this method handles row deletion
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            // remove the item from the data model
+            context.delete(items[indexPath.row])
+            items.remove(at: indexPath.row)
+            saveItems()
+            
+            // delete the table view row
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        } else if editingStyle == .insert {
+            // Not used in our example, but if you were adding a new row, this is where you would do it.
+        }
     }
     
     // MARK: - Add new items
