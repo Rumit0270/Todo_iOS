@@ -50,13 +50,6 @@ class TodoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         tableView.reloadData()
-        
-//        let selectedCell = tableView.cellForRow(at: indexPath)
-//        if selectedCell?.accessoryType == .checkmark {
-//            selectedCell?.accessoryType = .none
-//        } else {
-//            selectedCell?.accessoryType = .checkmark
-//        }
     }
     
     // MARK: - Add new items
