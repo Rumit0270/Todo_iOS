@@ -14,6 +14,7 @@
 		0477997122BF9D8800E1DBD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0477997022BF9D8800E1DBD8 /* Assets.xcassets */; };
 		0477997422BF9D8800E1DBD8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0477997222BF9D8800E1DBD8 /* LaunchScreen.storyboard */; };
 		0477997D22BFBAC900E1DBD8 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477997C22BFBAC900E1DBD8 /* Item.swift */; };
+		0477998122BFEAB100E1DBD8 /* CategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477998022BFEAB100E1DBD8 /* CategoriesTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		0477997322BF9D8800E1DBD8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0477997522BF9D8800E1DBD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0477997C22BFBAC900E1DBD8 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		0477998022BFEAB100E1DBD8 /* CategoriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CategoriesTableViewController.swift; path = TODO/Controllers/CategoriesTableViewController.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				0477997E22BFBAE900E1DBD8 /* Controllers */,
 				0477997B22BFBAB500E1DBD8 /* Model */,
 				0477997022BF9D8800E1DBD8 /* Assets.xcassets */,
+				0477996622BF9D8700E1DBD8 /* AppDelegate.swift */,
 				0477997522BF9D8800E1DBD8 /* Info.plist */,
 			);
 			path = TODO;
@@ -79,7 +82,7 @@
 		0477997E22BFBAE900E1DBD8 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0477996622BF9D8700E1DBD8 /* AppDelegate.swift */,
+				0477998022BFEAB100E1DBD8 /* CategoriesTableViewController.swift */,
 				0477996822BF9D8700E1DBD8 /* TodoListViewController.swift */,
 			);
 			path = Controllers;
@@ -169,6 +172,7 @@
 				0477996922BF9D8700E1DBD8 /* TodoListViewController.swift in Sources */,
 				0477996F22BF9D8700E1DBD8 /* TODO.xcdatamodeld in Sources */,
 				0477996722BF9D8700E1DBD8 /* AppDelegate.swift in Sources */,
+				0477998122BFEAB100E1DBD8 /* CategoriesTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

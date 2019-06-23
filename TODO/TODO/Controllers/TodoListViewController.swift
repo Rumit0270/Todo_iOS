@@ -75,6 +75,12 @@ class TodoListViewController: UITableViewController {
         
         let alert = UIAlertController(title: "Add a new To-do item:", message: "", preferredStyle: .alert)
         
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+
+        
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             guard let newItem = textField.text else {
@@ -93,11 +99,6 @@ class TodoListViewController: UITableViewController {
             self.saveItems()
             self.tableView.reloadData()
             
-        }
-        
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create new item"
-            textField = alertTextField
         }
         
         alert.addAction(action)
@@ -146,5 +147,15 @@ extension TodoListViewController: UISearchBarDelegate {
             loadItems(with: request)
         }
         view.endEditing(true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
     }
 }
