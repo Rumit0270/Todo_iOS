@@ -12,13 +12,17 @@ import CoreData
 class TodoListViewController: UITableViewController {
 
     var items = [Item]()
+    var selectedCategory: Category? {
+        didSet {
+            loadItems()
+        }
+    }
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadItems()
     }
     
     // MARK: - Table view data source methods
@@ -94,6 +98,7 @@ class TodoListViewController: UITableViewController {
             let item = Item(context: self.context)
             item.title = newItem
             item.done = false
+            item.parentCategory = self.selectedCategory
             self.items.append(item)
             
             self.saveItems()
@@ -114,8 +119,18 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()){
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil){
         //let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let inputPredicate = predicate {
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [inputPredicate, categoryPredicate])
+            request.predicate = compoundPredicate
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
         do {
             items = try context.fetch(request)
         } catch {
@@ -139,12 +154,11 @@ extension TodoListViewController: UISearchBarDelegate {
             let predicate = NSPredicate(format: "title CONTAINS[cd] %@", query)
             
             let request: NSFetchRequest<Item> = Item.fetchRequest()
-            request.predicate = predicate
             
             let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
             request.sortDescriptors = [sortDescriptor]
             
-            loadItems(with: request)
+            loadItems(with: request, predicate: predicate)
         }
         view.endEditing(true)
     }

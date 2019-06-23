@@ -39,9 +39,8 @@ class CategoriesTableViewController: UITableViewController {
     // MARK: - Table view delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        performSegue(withIdentifier: "gotoItems", sender: self)
     }
-    
     
     // MARK: - Data model manipulation methods
     func saveCategories() {
@@ -95,4 +94,12 @@ class CategoriesTableViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gotoItems" {
+            let destinationVC = segue.destination as! TodoListViewController
+            if let indexPath = tableView.indexPathForSelectedRow {
+                destinationVC.selectedCategory = categories[indexPath.row]
+            }
+        }
+    }
 }
