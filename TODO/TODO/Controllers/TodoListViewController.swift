@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
 
     var items = [Item]()
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +70,7 @@ class TodoListViewController: UITableViewController {
                 return
             }
             
-            let item = Item()
+            let item = Item(context: self.context)
             item.title = newItem
             item.done = false
             self.items.append(item)
@@ -90,26 +91,20 @@ class TodoListViewController: UITableViewController {
     
     // MARK: - Model manipulation methods
     func saveItems() {
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(self.items)
-            try data.write(to: dataFilePath!)
+            try context.save()
         } catch {
-            print("Error savind data")
+            print("Error saving data")
         }
     }
     
     func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                items = try decoder.decode([Item].self, from: data)
-            } catch {
-                
-            }
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            items = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context")
         }
     }
-    
-    
 }
 

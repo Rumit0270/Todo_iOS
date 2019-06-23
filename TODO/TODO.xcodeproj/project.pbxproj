@@ -63,7 +63,6 @@
 				0477997B22BFBAB500E1DBD8 /* Model */,
 				0477997022BF9D8800E1DBD8 /* Assets.xcassets */,
 				0477997522BF9D8800E1DBD8 /* Info.plist */,
-				0477996D22BF9D8700E1DBD8 /* TODO.xcdatamodeld */,
 			);
 			path = TODO;
 			sourceTree = "<group>";
@@ -72,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				0477997C22BFBAC900E1DBD8 /* Item.swift */,
+				0477996D22BF9D8700E1DBD8 /* TODO.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
