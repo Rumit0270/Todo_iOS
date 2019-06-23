@@ -22,7 +22,6 @@ class TodoListViewController: UITableViewController {
     }
     
     // MARK: - Table view data source methods
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
@@ -114,13 +113,38 @@ class TodoListViewController: UITableViewController {
         }
     }
     
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()){
+        //let request: NSFetchRequest<Item> = Item.fetchRequest()
         do {
             items = try context.fetch(request)
         } catch {
             print("Error fetching data from context")
         }
+        
+        tableView.reloadData()
     }
 }
 
+extension TodoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text else {
+            return
+        }
+    
+        if query.count == 0 {
+            loadItems()
+        } else {
+            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", query)
+            
+            let request: NSFetchRequest<Item> = Item.fetchRequest()
+            request.predicate = predicate
+            
+            let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+            request.sortDescriptors = [sortDescriptor]
+            
+            loadItems(with: request)
+        }
+        view.endEditing(true)
+    }
+}
