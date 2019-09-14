@@ -48,28 +48,43 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        let selectedItem = items?[indexPath.row]
-//        selectedItem.done = !selectedItem.done
-//        
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        tableView.reloadData()
+        if let selectedItem = items?[indexPath.row] {
+            do {
+                try realm.write {
+                    selectedItem.done = !selectedItem.done
+                }
+            } catch {
+                print("Error updating item done state: \(error)")
+            }
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.reloadData()
     }
     
     // this method handles row deletion
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        //        if editingStyle == .delete {
-        //            // remove the item from the data model
-        //            context.delete(items[indexPath.row])
-        //            items.remove(at: indexPath.row)
-        //            saveItems()
-        //
-        //            // delete the table view row
-        //            tableView.deleteRows(at: [indexPath], with: .fade)
-        //
-        //        } else if editingStyle == .insert {
-        //            // Not used in our example, but if you were adding a new row, this is where you would do it.
-        //        }
+
+        if editingStyle == .delete {
+            // remove the item from the data model
+            guard let selectedItem = items?[indexPath.row] else {
+                return
+            }
+            
+            do {
+                try realm.write {
+                    realm.delete(selectedItem)
+                }
+            } catch {
+                print("Error deleting the item: \(error)")
+            }
+            
+            // delete the table view row
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+        } else if editingStyle == .insert {
+            // Not used in our example, but if you were adding a new row, this is where you would do it.
+        }
     }
     
     // MARK: - Add new items
@@ -107,14 +122,14 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+    
+    
+    func loadItems() {
         
+        items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         
-        func loadItems() {
-            
-            items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-            
-            tableView.reloadData()
-        }
+        tableView.reloadData()
+    }
 }
 
 //extension TodoListViewController: UISearchBarDelegate {
