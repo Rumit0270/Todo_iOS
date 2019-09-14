@@ -8,8 +8,11 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 class CategoriesTableViewController: UITableViewController {
+    
+    let realm = try! Realm()
     
     var categories = [Category]()
     
@@ -43,9 +46,11 @@ class CategoriesTableViewController: UITableViewController {
     }
     
     // MARK: - Data model manipulation methods
-    func saveCategories() {
+    func save(category: Category) {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print("Error saving context!")
         }
@@ -82,11 +87,12 @@ class CategoriesTableViewController: UITableViewController {
                 return
             }
             
-            let category = Category(context: self.context)
+            // create a new Real Category model
+            let category = Category()
             category.name = categoryName
             
             self.categories.append(category)
-            self.saveCategories()
+            self.save(category: category)
             self.tableView.reloadData()
         }
         
