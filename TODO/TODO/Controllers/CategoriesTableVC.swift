@@ -126,6 +126,7 @@ class CategoriesTableVC: SwipeTableViewController {
             // create a new Real Category model
             let category = Category()
             category.name = categoryName
+            category.cellColor = UIColor.randomFlat.hexValue()
             
             self.save(category: category)
             self.tableView.reloadData()
