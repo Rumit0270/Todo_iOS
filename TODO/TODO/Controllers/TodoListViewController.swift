@@ -13,7 +13,7 @@ class TodoListViewController: UITableViewController {
     
     let realm = try! Realm()
     
-    var items:  Results<Item>?
+    var items: Results<Item>?
     
     var selectedCategory: Category? {
         didSet {
@@ -110,6 +110,7 @@ class TodoListViewController: UITableViewController {
                 try self.realm.write {
                     let item = Item()
                     item.title = newItem
+                    item.dateCreated = Date()
                     currentCategory.items.append(item)
                 }
             } catch {
@@ -127,40 +128,33 @@ class TodoListViewController: UITableViewController {
     func loadItems() {
         
         items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-        
         tableView.reloadData()
     }
 }
 
-//extension TodoListViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        guard let query = searchBar.text else {
-//            return
-//        }
-//
-//        if query.count == 0 {
-//            loadItems()
-//        } else {
-//            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", query)
-//
-//            //let request: NSFetchRequest<Item> = Item.fetchRequest()
-//
-//            let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
-//            request.sortDescriptors = [sortDescriptor]
-//
-//            loadItems(with: request, predicate: predicate)
-//        }
-//        view.endEditing(true)
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchText.count == 0 {
-//            loadItems()
-//
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//        }
-//    }
-//}
+extension TodoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text else {
+            return
+        }
+
+        if query.count == 0 {
+            loadItems()
+        } else {
+            items = items?.filter("title contains[cd] %@", query).sorted(byKeyPath: "dateCreated", ascending: true)
+        }
+        tableView.reloadData()
+        view.endEditing(true)
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.count == 0 {
+            loadItems()
+
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
