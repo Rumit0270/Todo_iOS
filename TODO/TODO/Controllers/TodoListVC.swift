@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListVC: SwipeTableViewController {
     
     let realm = try! Realm()
     
@@ -31,7 +31,7 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = items?[indexPath.row] {
             cell.textLabel?.text = item.title
@@ -62,28 +62,18 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    // this method handles row deletion
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-
-        if editingStyle == .delete {
-            // remove the item from the data model
-            guard let selectedItem = items?[indexPath.row] else {
-                return
+    override func updateModel(at indexPath: IndexPath) {
+        // remove the item from the data model
+        guard let selectedItem = items?[indexPath.row] else {
+            return
+        }
+        
+        do {
+            try realm.write {
+                realm.delete(selectedItem)
             }
-            
-            do {
-                try realm.write {
-                    realm.delete(selectedItem)
-                }
-            } catch {
-                print("Error deleting the item: \(error)")
-            }
-            
-            // delete the table view row
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-
-        } else if editingStyle == .insert {
-            // Not used in our example, but if you were adding a new row, this is where you would do it.
+        } catch {
+            print("Error deleting the item: \(error)")
         }
     }
     
@@ -132,7 +122,7 @@ class TodoListViewController: UITableViewController {
     }
 }
 
-extension TodoListViewController: UISearchBarDelegate {
+extension TodoListVC: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let query = searchBar.text else {
