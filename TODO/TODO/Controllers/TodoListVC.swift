@@ -51,6 +51,7 @@ class TodoListVC: SwipeTableViewController {
         if let selectedItem = items?[indexPath.row] {
             do {
                 try realm.write {
+                    // Update a model
                     selectedItem.done = !selectedItem.done
                 }
             } catch {
@@ -70,6 +71,7 @@ class TodoListVC: SwipeTableViewController {
         
         do {
             try realm.write {
+                // Delete a model
                 realm.delete(selectedItem)
             }
         } catch {

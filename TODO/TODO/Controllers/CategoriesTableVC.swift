@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoriesTableVC: SwipeTableViewController {
     
@@ -20,7 +21,6 @@ class CategoriesTableVC: SwipeTableViewController {
         super.viewDidLoad()
 
         loadCategories()
-        tableView.rowHeight = 80
     }
 
     // MARK: - Table view data source methods
@@ -34,6 +34,25 @@ class CategoriesTableVC: SwipeTableViewController {
         
         let category = categories?[indexPath.row]
         cell.textLabel?.text = category?.name ?? "No categories added yet"
+        
+        guard let currentCategory = categories?[indexPath.row] else {
+            return cell
+        }
+        
+        if let cellColor = currentCategory.cellColor {
+            cell.backgroundColor = UIColor(hexString: cellColor)
+        } else {
+            let cellColor = UIColor.randomFlat
+            do {
+                try realm.write {
+                    currentCategory.cellColor = cellColor.hexValue()
+                }
+            } catch {
+                print("Error saving the cell category: \(error)")
+            }
+           
+            cell.backgroundColor = cellColor
+        }
         
         return cell
     }
@@ -57,6 +76,7 @@ class CategoriesTableVC: SwipeTableViewController {
     func save(category: Category) {
         do {
             try realm.write {
+                // create a model
                 realm.add(category)
             }
         } catch {
@@ -65,7 +85,7 @@ class CategoriesTableVC: SwipeTableViewController {
     }
     
     func loadCategories() {
-        
+        // read a model
         categories = realm.objects(Category.self)
         tableView.reloadData()
     }
